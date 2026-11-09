@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -116,7 +117,7 @@ class RegistrationTest {
         }
     }
 
-   /*@ParameterizedTest
+   @ParameterizedTest
    @ValueSource(strings = {
             "test",
             "test@",
@@ -137,7 +138,7 @@ class RegistrationTest {
 
         }
     }
-*/
+
    @Test
     void passwordRequirementsAreValidated() {
         String uniqueEmail = "playwright+" + System.currentTimeMillis() + "@example.com";
@@ -245,7 +246,6 @@ class RegistrationTest {
     }
 
     @Test
-    //цикл
     void passwordRequirementsAreValidated2() {
 
         try (BrowserContext context = browser.newContext()) {
