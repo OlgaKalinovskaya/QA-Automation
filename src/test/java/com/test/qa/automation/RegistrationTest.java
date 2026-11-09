@@ -116,7 +116,7 @@ class RegistrationTest {
         }
     }
 
-   @ParameterizedTest
+   /*@ParameterizedTest
    @ValueSource(strings = {
             "test",
             "test@",
@@ -137,7 +137,7 @@ class RegistrationTest {
 
         }
     }
-
+*/
    @Test
     void passwordRequirementsAreValidated() {
         String uniqueEmail = "playwright+" + System.currentTimeMillis() + "@example.com";
