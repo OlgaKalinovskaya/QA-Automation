@@ -4,6 +4,7 @@ import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -37,29 +38,28 @@ public class LoginFormTest {
         }
     }
 
-    /*
-        @Test
-        void UserCanLogInWithValidCredentialsTest() {
-            String uniqueEmail = "user@premiumbank.com";
-            String validPassword = "Bank@123";
+    @Test
+    void UserCanLogInWithValidCredentialsTest() {
+        String uniqueEmail = "user@premiumbank.com";
+        String validPassword = "Bank@123";
 
-            try (BrowserContext context = browser.newContext()) {
-                Page page = context.newPage();
-                page.navigate(LOGINFORM_URL);
+        try (BrowserContext context = browser.newContext()) {
+            Page page = context.newPage();
+            page.navigate(LOGINFORM_URL);
 
-                page.getByTestId("login-email")
-                        .fill(uniqueEmail);
-                page.getByTestId("login-password")
-                        .fill(validPassword);
+            page.getByTestId("login-email")
+                    .fill(uniqueEmail);
+            page.getByTestId("login-password")
+                    .fill(validPassword);
 
-                page.getByRole(AriaRole.BUTTON,
-                        new Page.GetByRoleOptions().setName("Sign in").setExact(true)).click();
-                assertThat(page.getByTestId("login-success"))
-                        .hasText("Login Successful! Welcome to Premium Banking.");
-                assertThat(page.getByTestId("login-success"))
-                        .isVisible();
-            }
+            page.getByRole(AriaRole.BUTTON,
+                    new Page.GetByRoleOptions().setName("Sign in").setExact(true)).click();
+            assertThat(page.getByTestId("login-success"))
+                    .hasText("Login Successful! Welcome to Premium Banking.");
+            assertThat(page.getByTestId("login-success"))
+                    .isVisible();
         }
+    }
 
     @Test
     void UserCanNotLogInWithInvalidCredentialsTest() {
@@ -95,9 +95,11 @@ public class LoginFormTest {
                 List.of("user@premiumbank.com", "bank@125"),
                 List.of("use@premumbank.com", "Bak@123")
         );
-    } */
+    }
+
+
     @ParameterizedTest
-    @MethodSource ("incorrectCredentials")
+    @MethodSource("incorrectCredentials")
     void UserCanNotLogInWithInvalidCredentialsTest2(List<String> params) {
         try (BrowserContext context = browser.newContext()) {
             Page page = context.newPage();
@@ -120,7 +122,8 @@ public class LoginFormTest {
             page.waitForTimeout(1500);
         }
     }
-    static Stream<List<String>> incorrectCredentials(){
+
+    static Stream<List<String>> incorrectCredentials() {
         return Stream.of(
                 List.of("use@premiumbank.com", "Bank123"),
                 List.of("user@premumbank.com", "Bank@123"),
