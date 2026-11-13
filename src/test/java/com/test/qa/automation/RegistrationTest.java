@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
@@ -186,8 +185,8 @@ class RegistrationTest {
             Page page = context.newPage();
             page.navigate(REGISTRATION_URL);
             List<List<String>> passwordRequirements = passwordRequirements();
-            for (int i = 0; i < passwordRequirements().size(); i++) {
-                List<String> params = passwordRequirements().get(i);
+            for (int i = 0; i < passwordRequirements.size(); i++) {
+                List<String> params = passwordRequirements.get(i);
                 String passwordToTest = params.getFirst();
                 String validMeaning = params.get(1);
                 String label = params.getLast();
