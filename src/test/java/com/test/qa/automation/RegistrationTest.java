@@ -69,7 +69,7 @@ class RegistrationTest {
 
     @Test
     void userCanRegisterWithValidPasswordAndConfirmation() {
-        String uniqueEmail = "playwright+" + System.currentTimeMillis() + "@example.com";
+        String uniqueEmail = "playwright" + System.currentTimeMillis() + "@example.com";
         String validPassword = "Playwright1!";
 
         try (BrowserContext context = browser.newContext()) {
@@ -113,12 +113,12 @@ class RegistrationTest {
             assertThat(page.getByText("Your account has been created successfully."))
                     .isVisible();
 
-            page.waitForTimeout(5000);
+            page.waitForTimeout(3000);
         }
     }
 
-   @ParameterizedTest
-   @ValueSource(strings = {
+    @ParameterizedTest
+    @ValueSource(strings = {
             "test",
             "test@",
             "@gmail.com"
@@ -135,73 +135,6 @@ class RegistrationTest {
             assertThat(page.getByText("Your account has been created successfully."))
                     .not().isVisible();
             assertThat(page.getByText("Register")).isVisible();
-
-        }
-    }
-
-   @Test
-    void passwordRequirementsAreValidated() {
-        String uniqueEmail = "playwright+" + System.currentTimeMillis() + "@example.com";
-
-        String shortPassword = "P8";
-        String validPassword = "Playwright1!";
-        String noUppercaseLetter = "play";
-        String uppercaseLetter = "Pla";
-        String noLowercaseLetter = "PLAY";
-        String lowercaseLetter = "PLAy";
-
-
-        try (BrowserContext context = browser.newContext()) {
-            Page page = context.newPage();
-            page.navigate(REGISTRATION_URL);
-
-            page.getByLabel("Email Address").fill(uniqueEmail);
-
-            page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true))
-                    .fill(shortPassword);
-            assertThat(page.getByText("At least 8 characters"))
-                    .isVisible();
-            assertThat(page.getByText("At least 8 characters"))
-                    .containsClass("text-danger list-group-item");
-
-            page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true))
-                    .fill(validPassword);
-            assertThat(page.getByText("At least 8 characters"))
-                    .isVisible();
-            assertThat(page.getByText("At least 8 characters"))
-                    .containsClass("text-success list-group-item");
-
-
-            page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true))
-                    .fill(noUppercaseLetter);
-            assertThat(page.getByText("At least one uppercase letter (A-Z)"))
-                    .isVisible();
-            assertThat(page.getByText("At least one uppercase letter (A-Z)"))
-                    .containsClass("text-danger list-group-item");
-
-            page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true))
-                    .fill(uppercaseLetter);
-            assertThat(page.getByText("At least one uppercase letter (A-Z)"))
-                    .isVisible();
-            assertThat(page.getByText("At least one uppercase letter (A-Z)"))
-                    .containsClass("text-success list-group-item");
-
-
-            page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true))
-                    .fill(noLowercaseLetter);
-            assertThat(page.getByText("At least one lowercase letter (a-z)"))
-                    .isVisible();
-            assertThat(page.getByText("At least one lowercase letter (a-z)"))
-                    .containsClass("text-danger list-group-item");
-
-            page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true))
-                    .fill(lowercaseLetter);
-            assertThat(page.getByText("At least one lowercase letter (a-z)"))
-                    .isVisible();
-            assertThat(page.getByText("At least one lowercase letter (a-z)"))
-                    .containsClass("text-success list-group-item");
-
-            page.waitForTimeout(5000);
 
         }
     }
@@ -225,34 +158,36 @@ class RegistrationTest {
                     .isVisible();
             assertThat(page.getByText(label))
                     .containsClass("text-danger list-group-item");
-            page.waitForTimeout(5000);
+
             page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true))
                     .fill(validMeaning);
             assertThat(page.getByText(label))
                     .isVisible();
             assertThat(page.getByText(label))
                     .containsClass("text-success list-group-item");
-            page.waitForTimeout(5000);
+
         }
     }
-    static Stream<List<String>> passwordRequirements() {
-        return Stream.of(
+
+    static List<List<String>> passwordRequirements() {
+        return List.of(
                 List.of("P8", "Playwright1", "At least 8 characters"),
-                List.of("play", "Playwright","At least one uppercase letter (A-Z)" ),
+                List.of("play", "Playwright", "At least one uppercase letter (A-Z)"),
                 List.of("PLAY", "PLAYWRIGHt", "At least one lowercase letter (a-z)"),
-                List.of("Play?","Playwright7","At least one number (0-9)"),
-                List.of("pLay8","Playwright7$","At least one special character (!@#$%^&*()_+)")
+                List.of("Play?", "Playwright7", "At least one number (0-9)"),
+                List.of("pLay8", "Playwright7$", "At least one special character (!@#$%^&*()_+)")
         );
     }
 
     @Test
-    void passwordRequirementsAreValidated2() {
+    void passwordRequirementsAreValidatedWithLoop() {
 
         try (BrowserContext context = browser.newContext()) {
             Page page = context.newPage();
             page.navigate(REGISTRATION_URL);
-            for (int i = 0; i < passwordRequirements2().size(); i++) {
-                List<String> params = passwordRequirements2().get(i);
+            List<List<String>> passwordRequirements = passwordRequirements();
+            for (int i = 0; i < passwordRequirements().size(); i++) {
+                List<String> params = passwordRequirements().get(i);
                 String passwordToTest = params.getFirst();
                 String validMeaning = params.get(1);
                 String label = params.getLast();
@@ -263,26 +198,18 @@ class RegistrationTest {
                         .isVisible();
                 assertThat(page.getByText(label))
                         .containsClass("text-danger list-group-item");
-                page.waitForTimeout(5000);
+
                 page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true))
                         .fill(validMeaning);
                 assertThat(page.getByText(label))
                         .isVisible();
                 assertThat(page.getByText(label))
                         .containsClass("text-success list-group-item");
-                page.waitForTimeout(5000);
+
             }
         }
     }
-    static List<List<String>> passwordRequirements2() {
-        return List.of(
-                List.of("P8", "Playwright1", "At least 8 characters"),
-                List.of("play", "Playwright","At least one uppercase letter (A-Z)" ),
-                List.of("PLAY", "PLAYWRIGHt", "At least one lowercase letter (a-z)"),
-                List.of("Play?","Playwright7","At least one number (0-9)"),
-                List.of("pLay8","Playwright7$","At least one special character (!@#$%^&*()_+)")
-        );
-    }
+
 }
 
 
