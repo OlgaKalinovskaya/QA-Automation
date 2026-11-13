@@ -185,8 +185,7 @@ class RegistrationTest {
             Page page = context.newPage();
             page.navigate(REGISTRATION_URL);
             List<List<String>> passwordRequirements = passwordRequirements();
-            for (int i = 0; i < passwordRequirements.size(); i++) {
-                List<String> params = passwordRequirements.get(i);
+            for (List<String> params : passwordRequirements) {
                 String passwordToTest = params.getFirst();
                 String validMeaning = params.get(1);
                 String label = params.getLast();
